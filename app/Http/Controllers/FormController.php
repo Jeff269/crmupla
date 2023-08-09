@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Consulta;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,6 +14,12 @@ class FormController extends Controller
     public function index()
     {
         return Inertia::render('Form/index');
+    }
+
+
+    public function success()
+    {
+        return Inertia::render('Form/success');
     }
 
     /**
@@ -28,7 +35,34 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'modalidad' => 'required',
+            'facultad' => 'required',
+            'nombre_p' => 'required',
+            'apellido_p' => 'required',
+            'apellido_m' => 'required',
+            'celular' => 'required',
+            'correo' => 'required',
+            'dni' => 'required',
+        ]);
+
+        Consulta::create([
+            'modalidad' => $request['modalidad'],
+            'facultad' => $request['facultad'],
+            'carrera' => $request['carrera'],
+            'subcarrera' => $request['subcarrera'],
+            'nombre_p' => $request['nombre_p'],
+            'nombre_s' => $request['nombre_s'],
+            'apellido_p' => $request['apellido_p'],
+            'apellido_m' => $request['apellido_m'],
+            'celular' => $request['celular'],
+            'correo' => $request['correo'],
+            'dni' => $request['dni'],
+            'edad' => $request['edad'],
+        ]);
+
+        return redirect()->route('form.success');
+
     }
 
     /**
@@ -50,9 +84,12 @@ class FormController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Consulta $consulta)
     {
-        //
+        $consulta->atendido = 1;
+        $consulta->save();
+
+        return redirect()->back();
     }
 
     /**
@@ -63,3 +100,12 @@ class FormController extends Controller
         //
     }
 }
+
+
+// nombres:'',
+//         apellido_p:'',
+//         apellido_m:'',
+//         celular:'',
+//         correo:'',
+//         dni:'',
+//         edad:'',
